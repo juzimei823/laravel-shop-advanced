@@ -30,4 +30,33 @@ Route::group([
     $router->get('coupon_codes/{id}/edit', 'CouponCodesController@edit');
     $router->put('coupon_codes/{id}', 'CouponCodesController@update');
     $router->delete('coupon_codes/{id}', 'CouponCodesController@destroy');
+
+    //商品类目路由
+
+
+
+     $router->get('categories', 'CategoriesController@index');
+     $router->get('categories/create', 'CategoriesController@create');
+     $router->get('categories/{id}/edit', 'CategoriesController@edit');
+    //创建栏目分类
+
+    $router->post('categories', 'CategoriesController@store');
+    //ajax搜索相应的类目
+    $router->get('api/categories', 'CategoriesController@apiIndex');
+    //删除相应的栏目
+    $router->delete('categories/{id}', 'CategoriesController@destroy');
+
+    //众筹商品的路由
+
+    $router->get('crowdfunding_products', 'CrowdfundingProductsController@index');
+    $router->get('crowdfunding_products/create', 'CrowdfundingProductsController@create');
+    $router->get('crowdfunding_products/{id}/edit', 'CrowdfundingProductsController@edit');
+
+
+    $router->post('crowdfunding_products', 'CrowdfundingProductsController@store');
+
+    $router->put('crowdfunding_products/{id}', 'CrowdfundingProductsController@update');
+
+
+
 });

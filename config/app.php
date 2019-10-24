@@ -28,6 +28,12 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+
+
+
+
+    'ngrok_url'=>env('NGROK_URL'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

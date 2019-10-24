@@ -13,6 +13,9 @@ class Order extends Model
     const REFUND_STATUS_SUCCESS = 'success';
     const REFUND_STATUS_FAILED = 'failed';
 
+    const TYPE_NORMAL = 'normal';
+    const TYPE_CROWDFUNDING = 'crowdfunding';
+
     const SHIP_STATUS_PENDING = 'pending';
     const SHIP_STATUS_DELIVERED = 'delivered';
     const SHIP_STATUS_RECEIVED = 'received';
@@ -31,6 +34,11 @@ class Order extends Model
         self::SHIP_STATUS_RECEIVED  => '已收货',
     ];
 
+    public static $typeMap = [
+        self::TYPE_NORMAL   => '普通商品订单',
+        self::TYPE_CROWDFUNDING => '众筹商品订单'
+    ];
+
     protected $fillable = [
         'no',
         'address',
@@ -46,6 +54,7 @@ class Order extends Model
         'ship_status',
         'ship_data',
         'extra',
+        'type'
     ];
 
     protected $casts = [

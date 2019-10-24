@@ -37,6 +37,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
+        //guest中间件检测用户是否登录
         $this->middleware('guest');
     }
 

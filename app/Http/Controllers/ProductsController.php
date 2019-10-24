@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\InvalidRequestException;
+use App\Models\Category;
 use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -11,8 +12,45 @@ class ProductsController extends Controller
 {
     public function index(Request $request)
     {
+
+
+
+
+//        dd($request->input('category_id'));
         // 创建一个查询构造器
         $builder = Product::query()->where('on_sale', true);
+
+
+        if($request->input('category_id') && $category = Category::find($request->input('category_id'))){
+              //如果是父类目的话 查询出父类目所有的子类目的商品
+              if($category->is_directory){
+
+                  // 则筛选出该父类目下所有子类目的商品
+                  $builder->whereHas('category', function ($query) use ($category) {
+                      // 这里的逻辑参考本章第一节
+                      $query->where('path', 'like', $category->path.$category->id.'-%');
+                  });
+
+
+
+              }else{
+
+                 //查询子类目的商品
+
+
+                  $builder->where('category_id',$category->id);
+
+
+              }
+
+
+        }
+
+
+
+
+
+
         // 判断是否有提交 search 参数，如果有就赋值给 $search 变量
         // search 参数用来模糊搜索商品
         if ($search = $request->input('search', '')) {
@@ -43,8 +81,11 @@ class ProductsController extends Controller
 
         $products = $builder->paginate(16);
 
+//        dd($category->toArray());
+
         return view('products.index', [
             'products' => $products,
+            'category'=>$category ?? null,
             'filters'  => [
                 'search' => $search,
                 'order'  => $order,
@@ -54,6 +95,20 @@ class ProductsController extends Controller
 
     public function show(Product $product, Request $request)
     {
+
+
+//        $ss =  $product->GroupedProperties;
+//
+//        dd($ss->toArray());
+
+//         $ss = $product->properties->groupBy('name');
+//        dd($ss->toArray());
+
+//        $product->properties->groupBy('name')->map(function($property){
+//
+//                return $property->pluck('value')->all();
+//        });
+
         if (!$product->on_sale) {
             throw new InvalidRequestException('商品未上架');
         }
