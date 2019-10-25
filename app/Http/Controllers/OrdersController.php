@@ -19,18 +19,28 @@ use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * 用户订单
+     */
     public function index(Request $request)
     {
         $orders = Order::query()
             // 使用 with 方法预加载，避免N + 1问题
+
+                //with方法的嵌套关联  先关联orderitem模型再往下关联产品模型
             ->with(['items.product', 'items.productSku'])
             ->where('user_id', $request->user()->id)
             ->orderBy('created_at', 'desc')
             ->paginate();
 
+//        dd($orders);
+
         return view('orders.index', ['orders' => $orders]);
     }
 
+    //普通商品的订单提交
     public function store(OrderRequest $request, OrderService $orderService)
     {
         $user    = $request->user();
@@ -47,6 +57,7 @@ class OrdersController extends Controller
         // 参数中加入 $coupon 变量
         return $orderService->store($user, $address, $request->input('remark'), $request->input('items'), $coupon);
     }
+    //订单详情
 
     public function show(Order $order, Request $request)
     {
@@ -140,8 +151,6 @@ class OrdersController extends Controller
     }
 
     //众筹商品的订单提交
-
-
     public function crowdfunding(CrowdFundingOrderRequest $request,OrderService $orderService){
 
         //众筹商品的数量

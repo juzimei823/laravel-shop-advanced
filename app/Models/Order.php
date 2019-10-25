@@ -43,20 +43,22 @@ class Order extends Model
         'no',
         'address',
         'total_amount',
-        'remark',
-        'paid_at',
-        'payment_method',
-        'payment_no',
-        'refund_status',
-        'refund_no',
-        'closed',
-        'reviewed',
-        'ship_status',
-        'ship_data',
+        'remark',           //备注
+        'paid_at',          //支付时间
+        'payment_method',   //支付方式
+        'payment_no',     //支付交易号
+        'refund_status',   //退款状态
+        'refund_no',       //退款号
+        'closed',      //订单是否关闭
+        'reviewed',    //复查,回顾,反思
+        'ship_status',  //运输发货的状态
+        'ship_data',    //物流信息
         'extra',
-        'type'
+        'type'          //订单类型
     ];
 
+
+    //casts 属性类型转换   铸件模子
     protected $casts = [
         'closed'    => 'boolean',
         'reviewed'  => 'boolean',

@@ -83,15 +83,13 @@ class OrderService
         });
 
         // 这里我们直接使用 dispatch 函数
+        //任务分发的函数  加入到队列当中而不是同步执行
         dispatch(new CloseOrder($order, config('app.order_ttl')));
 
         return $order;
     }
 
     //众筹商品的下单逻辑
-
-
-
     public  function crowdfunding($user, $address, $sku, $amount){
 
              //开启数据库事物
@@ -134,8 +132,6 @@ class OrderService
             $crowdfundingTtl = $sku->product->crowdfunding->end_at->getTimestamp() - time();
             // 剩余秒数与默认订单关闭时间取较小值作为订单关闭时间
             dispatch(new CloseOrder($order, min(config('app.order_ttl'), $crowdfundingTtl)));
-
-
 
             return $order;
 

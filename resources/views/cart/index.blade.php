@@ -138,6 +138,7 @@
 
       // 监听创建订单按钮的点击事件
       $('.btn-create-order').click(function () {
+        alert(111);
         // 构建请求参数，将用户选择的地址的 id 和备注内容写入请求参数
         var req = {
           address_id: $('#order-form').find('select[name=address]').val(),
@@ -167,7 +168,7 @@
         });
         axios.post('{{ route('orders.store') }}', req)
           .then(function (response) {
-            swal('订单提交成功', '', 'success');
+            swal('订单提交成功', '', 'success')
               .then(() => {
                 location.href = '/orders/' + response.data.id;
               });
