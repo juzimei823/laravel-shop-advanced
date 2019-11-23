@@ -236,4 +236,6 @@ return [
 
     //订单关闭时间  s为单位
     'order_ttl' => 1800,
+    //秒杀订单关闭的时间
+    'seckill_order_ttl' => 600,
 ];

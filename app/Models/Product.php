@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class Product extends Model
@@ -12,11 +13,15 @@ class Product extends Model
 
     const TYPE_CROWDFUNDING = 'crowdfunding';
 
+    const TYPE_SECKILL = 'seckill';
+
 
     public static $typeMap = [
         self::TYPE_NORMAL => '普通商品',
 
-        self::TYPE_CROWDFUNDING => '众筹商品'
+        self::TYPE_CROWDFUNDING => '众筹商品',
+
+        self::TYPE_SECKILL =>  '秒杀商品'
     ];
 
 
@@ -62,6 +67,15 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    //与秒杀商品关联
+
+
+    public function seckill(){
+
+
+        return $this->hasOne(SeckillProduct::class);
+    }
+
     public function getImageUrlAttribute()
     {
         // 如果 image 字段本身就已经是完整的 url 就直接返回
@@ -79,6 +93,47 @@ class Product extends Model
 
                 return $property->pluck('value')->all();
         });
+
+    }
+
+
+
+    public function toESArray(){
+
+          $arr = Arr::only($this->toArray(),[
+
+              'id',
+              'type',
+              'title',
+              'category_id',
+              'long_title',
+              'on_sale',
+              'rating',
+              'sold_count',
+              'review_count',
+              'price',
+
+
+
+          ]);
+
+        // 如果商品有类目，则 category 字段为类目名数组，否则为空字符串
+        $arr['category'] = $this->category ? explode(' - ', $this->category->full_name) : '';
+        // 类目的 path 字段
+        $arr['category_path'] = $this->category ? $this->category->path : '';
+        // strip_tags 函数可以将 html 标签去除
+        $arr['description'] = strip_tags($this->description);
+        // 只取出需要的 SKU 字段
+        $arr['skus'] = $this->skus->map(function (ProductSku $sku) {
+            return Arr::only($sku->toArray(), ['title', 'description', 'price']);
+        });
+        // 只取出需要的商品属性字段
+        $arr['properties'] = $this->properties->map(function (ProductProperty $property) {
+            return Arr::only($property->toArray(), ['name', 'value']);
+        });
+
+        return $arr;
+
 
     }
 }

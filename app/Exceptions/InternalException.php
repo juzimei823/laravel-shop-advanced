@@ -17,6 +17,7 @@ class InternalException extends Exception
 
     public function render(Request $request)
     {
+        //判断是否是ajax请求
         if ($request->expectsJson()) {
             return response()->json(['msg' => $this->msgForUser], $this->code);
         }

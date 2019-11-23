@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Exceptions\InternalException;
 use App\Exceptions\InvalidRequestException;
 use App\Http\Requests\Admin\HandleRefundRequest;
+use App\Models\CrowdfundingProduct;
 use App\Models\Order;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
@@ -31,6 +32,7 @@ class OrdersController extends Controller
             ->body(view('admin.orders.show', ['order' => $order]));
     }
 
+    //发货操作
     public function ship(Order $order, Request $request)
     {
         // 判断当前订单是否已支付
@@ -40,6 +42,11 @@ class OrdersController extends Controller
         // 判断当前订单发货状态是否为未发货
         if ($order->ship_status !== Order::SHIP_STATUS_PENDING) {
             throw new InvalidRequestException('该订单已发货');
+        }
+        // 众筹订单只有在众筹成功之后发货
+        if ($order->type === Order::TYPE_CROWDFUNDING &&
+            $order->items[0]->product->crowdfunding->status !== CrowdfundingProduct::STATUS_SUCCESS) {
+            throw new InvalidRequestException('众筹订单只能在众筹成功之后发货');
         }
         // Laravel 5.5 之后 validate 方法可以返回校验过的值
         $data = $this->validate($request, [
@@ -60,6 +67,7 @@ class OrdersController extends Controller
         // 返回上一页
         return redirect()->back();
     }
+    //操作退款
 
     public function handleRefund(Order $order, HandleRefundRequest $request)
     {

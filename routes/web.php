@@ -35,7 +35,9 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
 
     //众筹商品下单
     Route::post('crowdfunding_orders', 'OrdersController@crowdfunding')->name('crowdfunding_orders.store');
+    //秒杀商品下单操作
 
+    Route::post('seckill_orders', 'OrdersController@seckill')->name('seckill_orders.store');
 
 
 

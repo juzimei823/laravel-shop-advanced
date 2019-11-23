@@ -18,12 +18,26 @@ class TestController extends Controller
     public function index(Request $request){
 
 
+//        $num = 1234.23;
+                    //第一是变量  保留的小数的位数  小数点的分隔符   千分位的分隔符
+//        echo number_format($num,3,'.',',');  //1,234.23
+
+
+
+
+//
+//        $arr = [1,2,4,5,6,3];
+//
+//
+//
+//        echo sprintf("FIND_IN_SET(id, '%s')", join(',', $arr));
+
 
 
         //检索符合条件的第一个模型
-        $category = Category::where('name', '内存')->first();
-
-        dd($category->toArray());
+//          $category = Category::where('name', '内存')->orderByRaw()->get();
+//
+//        dd($category->toArray());
 
 
           //关联模型的插入和更新  以用户和用户地址为例  他们的关系是1对多的关系
