@@ -33,7 +33,7 @@ class ProductsAddCategoryId extends Migration
         Schema::table('products', function (Blueprint $table) {
             //删除外键约束和列
 
-            $table->dropForeign('category_id');
+            $table->dropForeign(['category_id']);
             $table->dropColumn('category_id');
         });
     }
