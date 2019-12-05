@@ -20,7 +20,7 @@ class CreateCategoriesTable extends Migration
             //分类名称
             $table->string('name');
             //父级分类id  可以为Null
-            $table->unsignedBigInteger('parent_id')->nullabel();
+            $table->unsignedBigInteger('parent_id')->nullabel()->default(null);
             //定义一个外键约束引用categories表的id 并且定义级表关联模式 当父表删除 对应的字表也会被删除
             //innodb 支持外键约束
             $table->foreign('parent_id')->references('id')->on('categories')->onDelete('cascade');
